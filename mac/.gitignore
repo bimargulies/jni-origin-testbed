@@ -1,0 +1,6 @@
+test_TestNative.h
+*.so
+*.o
+*~
+*.class
+driverdlo
