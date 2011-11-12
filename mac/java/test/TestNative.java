@@ -5,7 +5,11 @@ public class TestNative {
     public static native void testNative();
 
     public static void main(String[] args) {
-	System.load(args[0]);
+	if (args.length == 0) {
+	    System.loadLibrary("jninoorigin");
+	} else {
+	    System.load(args[0]);
+	}
 	testNative();
     }
 }
