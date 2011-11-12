@@ -1,4 +1,4 @@
-all: libsl1.so libsl2.so driver driverdlo
+all: libsl1.so libsl2.so driver driverdlo compilejava libjni.so libjninoorigin.so
 
 
 libsl2.so: sl2.c
@@ -23,6 +23,17 @@ driverdlo: libsl1.so libsl2.so maindlo.c libsl1noorigin.so
 	mkdir testlib testbin
 	cp $@ testbin
 	cp *.so testlib
+
+compilejava:
+	-mkdir classes
+	javac -d classes java/test/TestNative.java
+	javah -classpath classes test.TestNative
+
+libjni.so: jni.c libsl2.so
+	gcc -I/usr/lib/jvm/java-6-sun/include -I/usr/lib/jvm/java-6-sun/include/linux -fPIC -shared -L. -o $@ jni.c -lsl2 -Wl,-rpath='$$ORIGIN'
+
+libjninoorigin.so: jni.c libsl2.so
+	gcc -I/usr/lib/jvm/java-6-sun/include  -I/usr/lib/jvm/java-6-sun/include/linux -fPIC -shared -L. -o $@ jni.c -lsl2
 
 clean:
 	rm -f driver libsl1.so libsl2.so
