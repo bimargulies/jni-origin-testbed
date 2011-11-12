@@ -40,7 +40,6 @@ testjava:
 	mkdir jtestlib
 	cp libjni*.so jtestlib
 	cp libsl2.so jtestlib
-	cp libjninoorigin.so jtestlib/libjninoorigin.jnilib
 	(cd jtestbin;java -cp ../classes test/TestNative $(PWD)/jtestlib/libjni.so)
 	(cd jtestbin;java -cp ../classes test/TestNative $(PWD)/jtestlib/libjninoorigin.so)
 

@@ -1,4 +1,4 @@
-all: libsl1.so libsl2.so driver driverdlo compilejava libjni.so libjninoorigin.so
+all: libsl1.so libsl2.so driverdlo compilejava libjni.so libjninoorigin.so
 
 
 libsl2.so: sl2.c
@@ -14,15 +14,22 @@ libsl1.so: libsl2.so sl1.c
 libsl1noorigin.so: libsl2.2.so sl1.c
 	gcc -fPIC -shared -L. -o $@ sl1.c -lsl2.2
 
-driver: libsl1.so libsl2.so main.c
-	gcc -L. -o driver main.c -lsl1 -Wl,-rpath-link=.  -Wl,-rpath='$$ORIGIN'
-
 driverdlo: libsl1.so libsl2.so maindlo.c libsl1noorigin.so
 	gcc  -o driverdlo maindlo.c -ldl
 	rm -rf testlib testbin
 	mkdir testlib testbin
 	cp $@ testbin
 	cp *.so testlib
+
+testjava:
+	rm -rf jtestlib jtestbin
+	mkdir jtestbin
+	mkdir jtestlib
+	cp libjni*.so jtestlib
+	cp libsl2.so jtestlib
+	(cd jtestbin;java -cp ../classes test/TestNative $(PWD)/jtestlib/libjni.so)
+	(cd jtestbin;java -cp ../classes test/TestNative $(PWD)/jtestlib/libjninoorigin.so)
+
 
 compilejava:
 	-mkdir classes
