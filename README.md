@@ -1,5 +1,8 @@
+Avoiding LD_LIBRARY_PATH and DYLD_LIBRARY_PATH with JNI
+=======================================================
+
 This material demonstrates how to use JNI to access a shared library
-that has, in turn, dependent shared libraries, WITHOUT the need to set
+that has, in turn, dependent shared libraries, *without* the need to set
 LD_LIBRARY_PATH on Linux and DYLD_LIBRARY_PATH on MacOSX.
 
 The requirement is that the dependent libs reside in some known
@@ -16,7 +19,7 @@ To avoid this annoying requirement, follow the instructions below.
 
 For Linux, when linking the JNI library, add:
 
-   -Wl,-rpath='$$ORIGIN' 
+    -Wl,-rpath='$$ORIGIN' 
 
 to the link command line. Note that the above is the appropriate
 syntax for a Makefile, where $$ maps to a single $. The overall goal
@@ -26,7 +29,7 @@ For Mac OSX, there is no corresponding simple option for the link
 command line. Instead, you have to run an additional command to patch
 the pathname. Here is an example:
 
-	install_name_tool -change libsl2.dynlib "@loader_path/libsl2.dynlib" libjni.jnilib
+    install_name_tool -change libsl2.dynlib "@loader_path/libsl2.dynlib" libjni.jnilib
 
 In the example, the jni library is 'libjni.jnilib", while the library
 it links to is "libsl2.dynlib".
